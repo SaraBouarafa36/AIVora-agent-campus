@@ -1,0 +1,6 @@
+flask>=3.0.0
+flask-cors>=4.0.0
+flask-limiter>=3.5.0
+argon2-cffi>=23.1.0
+PyMuPDF>=1.23.0
+requests>=2.31.0

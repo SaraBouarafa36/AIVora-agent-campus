@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AIvora · ENSA Beni Mellal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;0,900;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/css/main.css"/>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="login-screen">
+  <div class="login-bg">
+    <div class="login-orb login-orb-1"></div>
+    <div class="login-orb login-orb-2"></div>
+    <div class="login-orb login-orb-3"></div>
+  </div>
+  <div class="login-card" id="login-card">
+    <div class="lc-header">
+      <div class="lc-logo">
+        <div class="lc-logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M2 17l10 5 10-5" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M2 12l10 5 10-5" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="lc-brand">AIvora</div>
+          <div class="lc-school">ENSABM · USMS</div>
+        </div>
+      </div>
+    </div>
+    <div class="lc-body">
+      <h1 class="lc-title">Bienvenue</h1>
+      <p class="lc-sub">Connectez-vous avec vos identifiants institutionnels fournis par l'école.</p>
+      <div class="lc-legal">
+        <strong>⚖️ Cadre légal.</strong> Comptes fournis exclusivement par l'établissement.
+        Domaine requis: <strong>@usms.ac.ma</strong>. Traitement conforme <strong>RGPD</strong> & Loi 09-08.
+      </div>
+      <div class="form-group">
+        <label class="form-label">Adresse email institutionnelle</label>
+        <input class="form-input" id="li-email" type="email" placeholder="prenom.nom@usms.ac.ma" autocomplete="off" spellcheck="false"/>
+        <span class="form-hint">Seuls les comptes @usms.ac.ma sont autorisés</span>
+        <span class="form-error hidden" id="e-email">Email @usms.ac.ma requis</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mot de passe</label>
+        <div class="input-with-toggle">
+          <input class="form-input" id="li-pass" type="password" placeholder="••••••••" autocomplete="current-password"/>
+          <button class="pwd-toggle" onclick="togglePwd()" type="button" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <span class="form-error hidden" id="e-pass">Mot de passe requis</span>
+      </div>
+      <div class="form-error hidden" id="e-general" style="text-align:center;margin-bottom:12px;"></div>
+      <button class="login-btn" id="login-btn" onclick="doLogin()">
+        <span id="login-btn-text">Accéder à la plateforme</span>
+        <span id="login-spinner" class="spinner hidden"></span>
+      </button>
+      <div class="login-security">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Argon2id · AES-128-GCM · TLS 1.3 · RGPD
+      </div>
+    </div>
+    <div class="demo-hint">
+      <div class="demo-hint-title">Comptes demo disponibles:</div>
+      <div style="font-size:11px;margin-top:4px;line-height:1.6;">
+        🎓 <b>Étudiant:</b> sara.bouarafa@usms.ac.ma / ensa2024<br>
+        👨‍🏫 <b>Professeur:</b> h.touil@usms.ac.ma / prof2024<br>
+        🛡 <b>Admin:</b> admin@usms.ac.ma / admin2024
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app" class="hidden">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M2 17l10 5 10-5" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M2 12l10 5 10-5" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="sb-brand-name">AIvora</div>
+        <div class="sb-brand-sub">ENSA Beni Mellal</div>
+      </div>
+    </div>
+
+    <!-- Nav commun -->
+    <nav class="sb-nav">
+      <div class="sb-nav-label">NAVIGATION</div>
+      <div class="sb-item active" data-view="chat" onclick="switchView('chat',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Assistant IA</span>
+      </div>
+      <div class="sb-item" data-view="schedule" onclick="switchView('schedule',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Emploi du temps</span>
+      </div>
+      <div class="sb-item" data-view="reports" onclick="switchView('reports',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Signalements</span>
+        <span class="badge hidden" id="reports-badge">0</span>
+      </div>
+
+      <!-- Prof uniquement -->
+      <div class="sb-item role-prof hidden" data-view="prof-courses" onclick="switchView('prof-courses',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Mes cours (PDF)</span>
+      </div>
+      <div class="sb-item role-prof hidden" data-view="prof-schedule" onclick="switchView('prof-schedule',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>Mes séances</span>
+        <span class="badge badge-orange hidden" id="prof-sched-badge">0</span>
+      </div>
+
+      <!-- Admin uniquement -->
+      <div class="sb-item role-admin hidden" data-view="admin" onclick="switchView('admin',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Administration</span>
+        <span class="badge badge-red hidden" id="admin-badge">0</span>
+      </div>
+      <div class="sb-item role-admin hidden" data-view="admin-users" onclick="switchView('admin-users',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Utilisateurs</span>
+      </div>
+      <div class="sb-item role-admin hidden" data-view="admin-reports" onclick="switchView('admin-reports',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Signalements</span>
+        <span class="badge badge-red hidden" id="admin-reports-badge">0</span>
+      </div>
+      <div class="sb-item role-admin hidden" data-view="admin-logs" onclick="switchView('admin-logs',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Logs système</span>
+      </div>
+      <div class="sb-item role-admin hidden" data-view="admin-schedule" onclick="switchView('admin-schedule',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Valider EDT</span>
+        <span class="badge badge-orange hidden" id="sched-badge">0</span>
+      </div>
+    </nav>
+
+    <!-- PDF Zone (étudiant + prof) -->
+    <div class="sb-section" id="pdf-zone">
+      <div class="sb-nav-label">COURS (PDF)</div>
+      <button class="sb-upload-btn" onclick="document.getElementById('pdf-file-input').click()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importer un PDF
+      </button>
+      <input type="file" id="pdf-file-input" accept=".pdf" multiple style="display:none" onchange="uploadPDFs(event)"/>
+      <div id="pdf-list" class="sb-pdf-list"><div class="sb-pdf-empty">Aucun PDF importé</div></div>
+    </div>
+
+    <!-- Nouvelle conversation + Historique -->
+    <div class="sb-section sb-history-section">
+      <div class="sb-hist-header">
+        <span class="sb-nav-label" style="padding-bottom:0;margin-bottom:0;">HISTORIQUE</span>
+        <button class="sb-new-chat-btn" onclick="newConversation()" title="Nouvelle conversation">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Nouveau
+        </button>
+      </div>
+      <div id="history-list" class="sb-history"></div>
+    </div>
+
+    <!-- Rate bar -->
+    <div class="sb-rate">
+      <div class="sb-rate-header"><span>Requêtes/min</span><span id="rate-counter">0/10</span></div>
+      <div class="sb-rate-track"><div class="sb-rate-fill" id="rate-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- User footer -->
+    <div class="sb-user">
+      <div class="sb-user-av" id="sb-avatar">?</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name" id="sb-name">—</div>
+        <div class="sb-user-email" id="sb-email">—</div>
+      </div>
+      <button class="sb-profile-btn" onclick="openProfileModal()" title="Mon profil">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button class="sb-logout-btn" onclick="doLogout()" title="Déconnexion">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+
+    <!-- TOPBAR -->
+    <div id="topbar">
+      <div class="tb-left">
+        <button class="hamburger" onclick="toggleSidebar()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="mode-indicator" id="mode-indicator">
+          <span class="mode-dot" id="mode-dot"></span>
+          <span id="mode-label">MODE EDGE</span>
+        </div>
+        <div class="role-badge" id="role-badge">ÉTUDIANT</div>
+      </div>
+      <div class="tb-right">
+        <div class="tb-sync" id="tb-sync">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+          <span id="sync-label">Synchronisé</span>
+        </div>
+        <button class="tb-notif-btn" onclick="toggleNotifications()" id="notif-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge hidden" id="notif-count">0</span>
+        </button>
+        <div class="notif-dropdown hidden" id="notif-dropdown">
+          <div class="nd-header"><span>Notifications</span><button onclick="markAllRead()" class="nd-mark-read">Tout lu</button></div>
+          <div id="notif-list" class="nd-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VIEW: CHAT ── -->
+    <div id="view-chat" class="view active">
+      <div id="pdf-context-bar" class="hidden">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span class="pdf-ctx-name" id="pdf-ctx-name">—</span>
+        <div class="pdf-ctx-actions">
+          <button class="pdf-action" onclick="pdfQuickAction('resume')">📝 Résumer</button>
+          <button class="pdf-action" onclick="pdfQuickAction('questions')">❓ Q&A</button>
+          <button class="pdf-action" onclick="pdfQuickAction('points-cles')">🎯 Points clés</button>
+          <button class="pdf-action" onclick="pdfQuickAction('quiz')">🧪 Quiz</button>
+        </div>
+        <button class="pdf-ctx-close" onclick="clearPDFCtx()">✕</button>
+      </div>
+      <div id="chat-messages" class="chat-messages">
+        <div class="welcome-screen" id="welcome-screen">
+          <div class="ws-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M2 17l10 5 10-5" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M2 12l10 5 10-5" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2 class="ws-title">Bonjour, <span id="ws-name">Utilisateur</span> 👋</h2>
+          <p class="ws-sub" id="ws-sub">Je suis AIvora, votre assistant IA local. Vos données restent sur le serveur Edge de l'ENSA — conformité RGPD garantie.</p>
+          <div class="ws-chips" id="ws-chips">
+            <!-- chips générées dynamiquement selon le rôle -->
+          </div>
+        </div>
+      </div>
+      <div id="input-area">
+        <div class="input-tools">
+          <button class="itool" id="voice-btn" onclick="toggleVoice()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            Analyse vocale
+          </button>
+          <button class="itool" id="degrade-btn" onclick="toggleDegradeMode()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Mode dégradé
+          </button>
+          <button class="itool" onclick="clearChat()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Effacer
+          </button>
+          <span class="char-count" id="char-count">0/500</span>
+        </div>
+        <div class="input-row">
+          <textarea id="user-input" class="chat-input"
+            placeholder="Posez une question…"
+            maxlength="500"
+            onkeydown="handleInputKey(event)"
+            oninput="updateCharCount()"></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VIEW: SCHEDULE (commun) ── -->
+    <div id="view-schedule" class="view">
+      <div class="view-header">
+        <h2>📅 Emploi du temps — S4 IACS</h2>
+        <p>2ème Année · Semestre 4 · Salle A01, Bloc A · ENSA Beni Mellal</p>
+      </div>
+      <div id="schedule-content" class="schedule-grid"></div>
+      <div class="planning-section">
+        <h3>📚 Actions rapides</h3>
+        <div class="planning-btns">
+          <button class="plan-btn" onclick="askPlanning('semaine')">Planning semaine complète</button>
+          <button class="plan-btn" onclick="askPlanning('aujourd')">Cours d'aujourd'hui</button>
+          <button class="plan-btn" onclick="askPlanning('examen')">Planning révision</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VIEW: REPORTS (étudiant + prof) ── -->
+    <div id="view-reports" class="view">
+      <div class="view-header">
+        <h2>⚠️ Mes signalements</h2>
+        <p>Signalez les erreurs dans les réponses de l'assistant</p>
+      </div>
+      <div id="reports-list" class="reports-list"></div>
+    </div>
+
+    <!-- ── VIEW: PROF COURSES ── -->
+    <div id="view-prof-courses" class="view">
+      <div class="view-header">
+        <h2>📚 Gestion des cours PDF</h2>
+        <p>Déposez vos cours PDF pour les partager avec vos étudiants</p>
+      </div>
+      <div class="prof-course-upload">
+        <h3>Déposer un cours</h3>
+        <div class="form-row">
+          <input type="text" id="course-module-name" class="form-input" placeholder="Nom du module (ex: Administration Sécurisée)"/>
+          <label class="toggle-label">
+            <input type="checkbox" id="course-is-shared" checked/>
+            <span>Partager avec les étudiants</span>
+          </label>
+        </div>
+        <button class="plan-btn" onclick="document.getElementById('course-pdf-input').click()">
+          📤 Sélectionner un PDF de cours
+        </button>
+        <input type="file" id="course-pdf-input" accept=".pdf" style="display:none" onchange="uploadCoursePDF(event)"/>
+      </div>
+      <h3 style="margin:24px 0 12px;font-size:14px;color:var(--text2);">MES COURS DÉPOSÉS</h3>
+      <div id="prof-courses-list" class="reports-list"></div>
+    </div>
+
+    <!-- ── VIEW: PROF SCHEDULE ── -->
+    <div id="view-prof-schedule" class="view">
+      <div class="view-header">
+        <h2>🕐 Mes séances</h2>
+        <p>Proposez des séances — elles seront confirmées par l'administration</p>
+      </div>
+      <div class="prof-sched-form">
+        <h3>Ajouter une séance</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Module</label>
+            <input type="text" id="ps-module" class="form-input" placeholder="Nom du module"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jour</label>
+            <select id="ps-jour" class="form-input">
+              <option value="1">Lundi</option>
+              <option value="2">Mardi</option>
+              <option value="3">Mercredi</option>
+              <option value="4">Jeudi</option>
+              <option value="5">Vendredi</option>
+              <option value="6">Samedi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Heure début</label>
+            <input type="time" id="ps-debut" class="form-input" value="09:00"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Heure fin</label>
+            <input type="time" id="ps-fin" class="form-input" value="10:45"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Salle</label>
+            <input type="text" id="ps-salle" class="form-input" value="A01, Bloc A"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Filière</label>
+            <input type="text" id="ps-filiere" class="form-input" value="2A IACS"/>
+          </div>
+        </div>
+        <button class="login-btn" style="max-width:280px;margin-top:12px;" onclick="submitProfSchedule()">
+          Soumettre pour validation →
+        </button>
+      </div>
+      <h3 style="margin:24px 0 12px;font-size:14px;color:var(--text2);">MES SÉANCES SOUMISES</h3>
+      <div id="prof-sched-list" class="reports-list"></div>
+    </div>
+
+    <!-- ── VIEW: ADMIN ── -->
+    <div id="view-admin" class="view">
+      <div class="view-header">
+        <h2>🛡 Panneau d'administration</h2>
+        <p>Tableau de bord général — ENSA Beni Mellal</p>
+      </div>
+      <div id="admin-stats-cards" class="admin-stats-grid"></div>
+    </div>
+
+    <!-- ── VIEW: ADMIN USERS ── -->
+    <div id="view-admin-users" class="view">
+      <div class="view-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h2>👥 Gestion des utilisateurs</h2>
+          <p>Créer, modifier et supprimer les comptes étudiants et professeurs</p>
+        </div>
+        <button class="btn-primary" onclick="openCreateUserModal()">+ Créer un compte</button>
+      </div>
+      <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="filter-btn active" onclick="filterUsers('all',this)">Tous</button>
+        <button class="filter-btn" onclick="filterUsers('student',this)">Étudiants</button>
+        <button class="filter-btn" onclick="filterUsers('professor',this)">Professeurs</button>
+      </div>
+      <div id="admin-users-list" class="users-list"></div>
+    </div>
+
+    <!-- ── VIEW: ADMIN REPORTS ── -->
+    <div id="view-admin-reports" class="view">
+      <div class="view-header">
+        <h2>⚠️ Signalements</h2>
+        <p>Gérer les signalements soumis par les utilisateurs</p>
+      </div>
+      <div id="admin-reports-panel" class="reports-list"></div>
+    </div>
+
+    <!-- ── VIEW: ADMIN LOGS ── -->
+    <div id="view-admin-logs" class="view">
+      <div class="view-header">
+        <h2>📊 Logs système</h2>
+        <p>Historique des conversations de tous les utilisateurs</p>
+      </div>
+      <div style="margin-bottom:12px;">
+        <input type="text" id="logs-search" class="form-input" placeholder="Rechercher par nom ou contenu…" oninput="filterLogs()" style="max-width:360px;"/>
+      </div>
+      <div id="admin-logs-users" class="users-list"></div>
+      <div id="admin-logs-conv" class="logs-conv hidden"></div>
+    </div>
+
+    <!-- ── VIEW: ADMIN SCHEDULE ── -->
+    <div id="view-admin-schedule" class="view">
+      <div class="view-header">
+        <h2>📅 Validation des séances</h2>
+        <p>Confirmez ou refusez les séances proposées par les professeurs</p>
+      </div>
+      <div id="admin-sched-list" class="reports-list"></div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <div id="right-panel">
+    <div class="rp-section">
+      <div class="rp-title">SYSTÈME</div>
+      <div class="rp-model-card">
+        <div class="rp-model-name" id="rp-model">mistral:7b</div>
+        <div class="rp-model-detail">Ollama local · localhost:11434<br>RAM: ~14 GB · FP16</div>
+      </div>
+      <div class="rp-badge-rgpd">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Conforme RGPD · Loi 09-08
+      </div>
+      <div class="rp-stat"><span>Mode actif</span><span class="rp-val rp-blue" id="rp-mode">EDGE</span></div>
+      <div class="rp-stat"><span>Latence moy.</span><span class="rp-val" id="rp-lat">—</span></div>
+      <div class="rp-stat"><span>Cache hits</span><span class="rp-val rp-teal" id="rp-cache">0</span></div>
+      <div class="rp-stat"><span>PII filtrés</span><span class="rp-val rp-orange" id="rp-pii">0</span></div>
+      <div class="rp-stat"><span>PDF chargés</span><span class="rp-val rp-purple" id="rp-pdfs">0</span></div>
+    </div>
+    <div class="rp-section">
+      <div class="rp-title">PERFORMANCE</div>
+      <div class="rp-perf-item">
+        <div class="rp-perf-row"><span>Pertinence</span><span id="pv1">—</span></div>
+        <div class="rp-bar"><div class="rp-bar-fill" id="pb1" style="width:0%;background:var(--green)"></div></div>
+      </div>
+      <div class="rp-perf-item">
+        <div class="rp-perf-row"><span>Confiance</span><span id="pv2">—</span></div>
+        <div class="rp-bar"><div class="rp-bar-fill" id="pb2" style="width:0%;background:var(--accent)"></div></div>
+      </div>
+      <div class="rp-perf-item">
+        <div class="rp-perf-row"><span>Débit tok/s</span><span id="pv3">—</span></div>
+        <div class="rp-bar"><div class="rp-bar-fill" id="pb3" style="width:0%;background:var(--purple)"></div></div>
+      </div>
+    </div>
+    <div class="rp-section">
+      <div class="rp-title">SYNC CLOUD</div>
+      <div class="rp-sync-card">
+        <div class="rp-sync-row">
+          <div class="rp-sync-dot synced" id="rp-sync-dot"></div>
+          <span id="rp-sync-text">Synchronisé</span>
+        </div>
+        <div class="rp-sync-detail" id="rp-sync-detail">AES-128-GCM · —</div>
+        <button class="rp-sync-btn" onclick="forceSync()">↺ Forcer sync</button>
+      </div>
+    </div>
+    <div class="rp-section">
+      <div class="rp-title">CACHE SÉMANTIQUE</div>
+      <div class="rp-cache-info">cosinus TF-IDF · seuil 0.82</div>
+      <div id="rp-cache-list"></div>
+    </div>
+    <div class="rp-section" id="rp-today-section" style="display:none">
+      <div class="rp-title">COURS AUJOURD'HUI</div>
+      <div id="rp-today-courses"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODALS ══════════ -->
+
+<!-- PROFIL MODAL -->
+<div class="modal-overlay hidden" id="profile-modal">
+  <div class="modal-card profile-card">
+    <div class="modal-header">
+      <h3>👤 Mon Profil</h3>
+      <button class="modal-close" onclick="closeProfileModal()">✕</button>
+    </div>
+    <div class="profile-avatar-section">
+      <div class="profile-avatar" id="profile-avatar-big">?</div>
+      <div>
+        <div class="profile-name" id="profile-full-name">—</div>
+        <div class="profile-role-tag" id="profile-role-tag">—</div>
+      </div>
+    </div>
+    <div class="profile-info-grid">
+      <div class="profile-info-item">
+        <div class="pii-label">Prénom</div>
+        <div class="pii-value" id="p-prenom">—</div>
+      </div>
+      <div class="profile-info-item">
+        <div class="pii-label">Nom</div>
+        <div class="pii-value" id="p-nom">—</div>
+      </div>
+      <div class="profile-info-item">
+        <div class="pii-label">Email</div>
+        <div class="pii-value" id="p-email">—</div>
+      </div>
+      <div class="profile-info-item">
+        <div class="pii-label">Filière / Poste</div>
+        <div class="pii-value" id="p-filiere">—</div>
+      </div>
+      <div class="profile-info-item" id="p-niveau-row">
+        <div class="pii-label">Niveau</div>
+        <div class="pii-value" id="p-niveau">—</div>
+      </div>
+      <div class="profile-info-item" id="p-apogee-row">
+        <div class="pii-label">N° Apogée</div>
+        <div class="pii-value" id="p-apogee">—</div>
+      </div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;"/>
+    <h4 style="font-size:13px;font-weight:600;margin-bottom:12px;">🔒 Changer le mot de passe</h4>
+    <div class="form-group">
+      <label class="form-label">Mot de passe actuel</label>
+      <input type="password" id="pwd-current" class="form-input" placeholder="••••••••"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nouveau mot de passe (min. 8 caractères)</label>
+      <input type="password" id="pwd-new" class="form-input" placeholder="••••••••"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirmer le nouveau mot de passe</label>
+      <input type="password" id="pwd-confirm" class="form-input" placeholder="••••••••"/>
+    </div>
+    <div class="form-error hidden" id="pwd-error"></div>
+    <div class="modal-btns">
+      <button class="btn-secondary" onclick="closeProfileModal()">Fermer</button>
+      <button class="btn-primary" onclick="changePassword()">Enregistrer le mot de passe</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="modal-overlay hidden" id="report-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>⚠️ Signaler une erreur</h3>
+      <button class="modal-close" onclick="closeReportModal()">✕</button>
+    </div>
+    <p>Décrivez l'inexactitude ou l'erreur détectée. L'équipe pédagogique sera notifiée.</p>
+    <textarea id="report-desc" placeholder="Ex: La définition de l'algorithme RSA est incorrecte…"></textarea>
+    <div class="modal-btns">
+      <button class="btn-secondary" onclick="closeReportModal()">Annuler</button>
+      <button class="btn-primary" onclick="submitReport()">Envoyer le signalement</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN REPLY MODAL -->
+<div class="modal-overlay hidden" id="admin-reply-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>📬 Répondre au signalement</h3>
+      <button class="modal-close" onclick="closeAdminModal()">✕</button>
+    </div>
+    <p class="modal-report-desc" id="admin-modal-desc">—</p>
+    <textarea id="admin-reply-text" placeholder="Votre réponse à l'étudiant…"></textarea>
+    <div class="modal-btns">
+      <button class="btn-secondary" onclick="closeAdminModal()">Annuler</button>
+      <button class="btn-primary" onclick="submitAdminReply()">Envoyer la réponse</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN SCHEDULE MODAL -->
+<div class="modal-overlay hidden" id="admin-sched-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>📅 Traiter la séance</h3>
+      <button class="modal-close" onclick="document.getElementById('admin-sched-modal').classList.add('hidden')">✕</button>
+    </div>
+    <div id="admin-sched-modal-info" style="font-size:13px;color:var(--text2);margin-bottom:12px;"></div>
+    <textarea id="admin-sched-note" placeholder="Note optionnelle pour le professeur…"></textarea>
+    <div class="modal-btns">
+      <button class="btn-secondary" onclick="handleScheduleAction('reject')">❌ Refuser</button>
+      <button class="btn-primary" onclick="handleScheduleAction('confirm')">✅ Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- VOICE MODAL -->
+<div class="modal-overlay hidden" id="voice-modal">
+  <div class="modal-card voice-modal-card">
+    <div class="modal-header">
+      <h3>🎤 Analyse vocale</h3>
+      <button class="modal-close" onclick="stopVoice()">✕</button>
+    </div>
+    <div class="voice-animation" id="voice-anim">
+      <div class="voice-ring r1"></div>
+      <div class="voice-ring r2"></div>
+      <div class="voice-ring r3"></div>
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      </svg>
+    </div>
+    <div class="voice-status" id="voice-status">Parlez maintenant…</div>
+    <div class="voice-transcript hidden" id="voice-transcript"></div>
+    <div class="stress-result hidden" id="stress-result"></div>
+    <div class="voice-btns">
+      <button class="btn-secondary" onclick="stopVoice()">Annuler</button>
+      <button class="btn-primary hidden" id="use-transcript-btn" onclick="useTranscript()">Utiliser ce texte →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE USER MODAL -->
+<div class="modal-overlay hidden" id="create-user-modal">
+  <div class="modal-card" style="max-width:500px;">
+    <div class="modal-header">
+      <h3>➕ Créer un compte</h3>
+      <button class="modal-close" onclick="closeCreateUserModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Prénom *</label>
+      <input type="text" id="cu-prenom" class="form-input" placeholder="Ex: Sara"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nom *</label>
+      <input type="text" id="cu-nom" class="form-input" placeholder="Ex: Bouarafa"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email (@usms.ac.ma) *</label>
+      <input type="email" id="cu-email" class="form-input" placeholder="prenom.nom@usms.ac.ma"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Rôle *</label>
+      <select id="cu-role" class="form-input" onchange="toggleStudentFields()">
+        <option value="student">Étudiant</option>
+        <option value="professor">Professeur</option>
+      </select>
+    </div>
+    <div id="cu-student-fields">
+      <div class="form-group">
+        <label class="form-label">Filière</label>
+        <input type="text" id="cu-filiere" class="form-input" placeholder="Ex: 2ème année IACS"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Niveau</label>
+        <input type="text" id="cu-niveau" class="form-input" placeholder="Ex: Bac+2"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">N° Apogée</label>
+        <input type="text" id="cu-apogee" class="form-input" placeholder="Ex: 22011457"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mot de passe initial *</label>
+      <input type="password" id="cu-password" class="form-input" placeholder="Min. 6 caractères"/>
+    </div>
+    <div class="form-error hidden" id="cu-error"></div>
+    <div class="modal-btns">
+      <button class="btn-secondary" onclick="closeCreateUserModal()">Annuler</button>
+      <button class="btn-primary" onclick="createUser()">Créer le compte</button>
+    </div>
+  </div>
+</div>
+
+<!-- USER DETAIL MODAL -->
+<div class="modal-overlay hidden" id="user-detail-modal">
+  <div class="modal-card" style="max-width:520px;">
+    <div class="modal-header">
+      <h3 id="udm-title">👤 Détail utilisateur</h3>
+      <button class="modal-close" onclick="closeUserDetailModal()">✕</button>
+    </div>
+    <div id="udm-info" style="margin-bottom:16px;"></div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;"/>
+    <h4 style="font-size:13px;font-weight:600;margin-bottom:10px;">🔑 Réinitialiser le mot de passe</h4>
+    <div class="form-group">
+      <input type="password" id="udm-pwd" class="form-input" placeholder="Nouveau mot de passe…"/>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn-primary" onclick="resetUserPassword()">Réinitialiser</button>
+      <button class="btn-secondary" onclick="viewUserConversations()">💬 Voir historique</button>
+      <button class="btn-danger" onclick="deleteUser()">🗑 Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

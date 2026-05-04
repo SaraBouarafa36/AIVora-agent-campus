@@ -1,0 +1,7 @@
+data/
+cache/
+uploads/
+{*}
+__pycache__/
+*.db
+*.log
