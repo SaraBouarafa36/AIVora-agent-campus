@@ -1,12 +1,11 @@
-###### \# AIVora — Assistant IA Génératif Edge pour un Campus Intelligent
+# AIVora — Assistant IA Génératif Edge pour un Campus Intelligent
 
-###### 
+
 
 ###### Assistant IA génératif embarqué (edge), conçu pour les étudiants et le personnel d'un campus intelligent — traitement en temps réel, sans dépendance cloud.
 
-###### 
 
-###### \## Fonctionnalités
+## Fonctionnalités
 
 ###### \- Interface conversationnelle avec historique des conversations (sidebar)
 
@@ -22,31 +21,31 @@
 
 ###### 
 
-###### \## Technologies
+## Technologies
 
 ###### Python, Flask, SQLite, Ollama (Mistral), HTML/CSS/JS
 
 ###### 
 
-###### \## Installation
+## Installation
 
 ###### 
 
 ###### ```bash
 
-###### \# 1. Aller dans le dossier
+## 1. Aller dans le dossier
 
 ###### cd AIvora\_v4
 
 ###### 
 
-###### \# 2. Installer les dépendances
+## 2. Installer les dépendances
 
 ###### pip install -r backend/requirements.txt
 
 ###### 
 
-###### \# 3. (Optionnel) Lancer Ollama avec Mistral
+## 3. (Optionnel) Lancer Ollama avec Mistral
 
 ###### ollama serve
 
@@ -54,13 +53,13 @@
 
 ###### 
 
-###### \# 4. Lancer le serveur
+## 4. Lancer le serveur
 
 ###### python backend/app.py
 
 ###### 
 
-###### \# 5. Ouvrir dans le navigateur
+## 5. Ouvrir dans le navigateur
 
 ###### \# http://127.0.0.1:5000
 
@@ -68,7 +67,7 @@
 
 ###### 
 
-###### \## Structure du projet
+## Structure du projet
 
 AIvora\_v4/
 
